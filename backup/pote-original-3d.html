@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12060b">
+<title>Pote de Motivos</title>
+<meta name="description" content="Um presente para você.">
+<meta property="og:title" content="Um presente para você">
+<meta property="og:description" content="Abra com calma.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=La+Belle+Aurore&display=swap" rel="stylesheet">
+
+<script>
+/* ============================================================
+   ✏️  PERSONALIZE AQUI — é só mexer neste bloco
+   ============================================================ */
+const CONFIG = {
+  nome: "meu amor",              // o nome ou apelido dela
+  assinatura: "Com todo o meu amor",   // como você assina no final
+  dataInicio: "2026-08-17",      // dia em que começaram a namorar (AAAA-MM-DD)
+  // letra usada nas cartas: "La Belle Aurore" (manuscrita) ou "Instrument Serif" (impressa, em itálico)
+  letraDaCarta: "La Belle Aurore",
+  cartaFinal: [
+    "Três meses parecem pouco no calendário, mas já mudaram tudo aqui dentro.",
+    "Esses papeizinhos são só o começo — o pote de verdade não tem fundo, e eu pretendo passar muito tempo enchendo ele.",
+    "Que sorte a minha ter encontrado você."
+  ],
+  motivos: [
+    "O seu sorriso, que arruma o meu dia inteiro em um segundo.",
+    "O jeito que você ri das próprias piadas antes de terminar de contar.",
+    "A sua voz dizendo “bom dia” — é o meu som preferido.",
+    "Como você me olha quando acha que eu não estou vendo.",
+    "O seu abraço, que é o lugar mais calmo do mundo.",
+    "A sua mania de cuidar de todo mundo ao seu redor.",
+    "Como qualquer programa simples vira o melhor dia quando é com você.",
+    "O seu cheiro, que fica na minha roupa e eu finjo que não adoro.",
+    "A coragem que você tem de ser exatamente quem você é.",
+    "As suas mensagens no meio do dia, que me fazem sorrir à toa pro celular.",
+    "O jeito que você fica linda sem fazer o menor esforço.",
+    "Como você me escuta de verdade, até quando eu falo demais.",
+    "A sua risada — eu faria qualquer palhaçada só pra ouvir de novo.",
+    "O seu coração enorme, onde cabe o mundo e ainda sobra espaço pra mim.",
+    "Como você me faz querer ser uma pessoa melhor, sem nunca me pedir isso.",
+    "As nossas conversas que começam do nada e não acabam nunca.",
+    "O jeitinho que você tem quando está com sono.",
+    "A sua inteligência, que me impressiona todos os dias.",
+    "Como a sua mão encaixa na minha, como se fosse feita sob medida.",
+    "O seu jeito de comemorar as minhas pequenas vitórias como se fossem enormes.",
+    "A paz que eu sinto só de saber que você existe.",
+    "Os seus olhos, onde eu me perderia fácil pelo resto da vida.",
+    "Como você deixa os meus dias ruins mais leves — e os bons, inesquecíveis.",
+    "A sua teimosia, que eu jamais vou admitir que acho um charme.",
+    "O carinho que você coloca nas pequenas coisas.",
+    "A saudade que eu sinto cinco minutos depois de te ver.",
+    "Os seus sonhos — e a sorte de poder torcer por cada um deles de perto.",
+    "O jeito que você diz o meu nome.",
+    "Em três meses, você já virou a minha pessoa favorita.",
+    "E o principal: você me escolheu de volta. Todos os dias."
+  ]
+};
+</script>
+
+<style>
+:root{
+  --night:#12060b; --fog:#1c0b12; --gold:#e9b872; --cream:#f4ead8; --cream-dim:rgba(244,234,216,.66);
+  --ink:#2b1a12; --paper:#ecdfc2; --wax:#9c1b2e;
+  --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"La Belle Aurore","Bradley Hand",cursive;
+  --ease:cubic-bezier(.22,.8,.2,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  margin:0; background:var(--night); color:var(--cream); font-family:var(--sans);
+  overflow:hidden; overscroll-behavior:none; -webkit-font-smoothing:antialiased; touch-action:manipulation;
+}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+#scene{z-index:0}
+#front{z-index:2;pointer-events:none}
+#vig{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(125% 90% at 50% 52%, transparent 50%, rgba(5,1,3,.62) 100%)}
+#veil{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:rgba(13,5,9,0); -webkit-backdrop-filter:blur(0px); backdrop-filter:blur(0px);
+  transition:background-color 1s ease, -webkit-backdrop-filter 1s ease, backdrop-filter 1s ease;
+}
+body[data-veil="intro"]  #veil{background:rgba(13,5,9,.36); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px)}
+body[data-veil="letter"] #veil{background:rgba(13,5,9,.52); -webkit-backdrop-filter:blur(13px); backdrop-filter:blur(13px)}
+body[data-veil="final"]  #veil{background:rgba(13,5,9,.66); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px)}
+
+/* ---------- interface principal ---------- */
+.top,.bottom{position:fixed;z-index:3;left:0;right:0;text-align:center;padding:0 24px;transition:opacity .8s ease, transform .8s var(--ease)}
+.top{top:calc(env(safe-area-inset-top) + 30px);pointer-events:none}
+.top h1{margin:0;font:400 clamp(2.6rem,10.5vw,3.7rem)/1 var(--serif);letter-spacing:-.015em;text-shadow:0 2px 24px rgba(18,6,11,.6)}
+.top p{margin:.6em 0 0;font-size:1rem;color:var(--cream-dim)}
+.bottom{bottom:calc(env(safe-area-inset-bottom) + 20px);display:flex;flex-direction:column;align-items:center;gap:10px}
+#hint{margin:0 0 6px;font-size:1.02rem;animation:breathe 2.8s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.5}}
+.progress{width:min(210px,54vw);height:2px;border-radius:2px;background:rgba(244,234,216,.18);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--gold);transform-origin:0 50%;transform:scaleX(0);transition:transform 1s var(--ease)}
+.count{margin:0;font:400 1.35rem/1 var(--serif)}
+.count.bump{animation:bump .7s var(--ease)}
+@keyframes bump{30%{transform:scale(1.28);color:var(--gold)}}
+.quiet{font-size:.92rem;color:var(--cream-dim);padding:8px 12px;text-decoration:underline;text-decoration-color:rgba(244,234,216,.3);text-underline-offset:5px}
+.quiet:hover{color:var(--cream)}
+#jarBtn{position:fixed;z-index:3;left:12%;right:12%;top:20%;bottom:24%;border-radius:36px}
+body:not([data-ui="main"]) .top{opacity:0;transform:translateY(-14px)}
+body:not([data-ui="main"]) .bottom{opacity:0;transform:translateY(14px);pointer-events:none}
+body:not([data-ui="main"]) #jarBtn{display:none}
+
+.pill{
+  font:500 1.02rem var(--sans); color:var(--cream); padding:15px 32px; border-radius:999px;
+  border:1px solid rgba(244,234,216,.32); background:rgba(244,234,216,.1);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  transition:transform .25s var(--ease), background-color .25s;
+}
+.pill:hover{background:rgba(244,234,216,.18)} .pill:active{transform:scale(.96)}
+.pill.solid{background:var(--cream);color:#2a0f1a;border-color:transparent;font-weight:600}
+.pill.solid:hover{background:#fff}
+.pill[disabled]{opacity:.55;cursor:default}
+
+/* ---------- carta aberta ---------- */
+#letterUi{
+  position:fixed; z-index:4; left:0; right:0; bottom:calc(env(safe-area-inset-bottom) + 34px);
+  display:flex; justify-content:center; opacity:0; transform:translateY(12px); pointer-events:none;
+  transition:opacity .5s ease, transform .5s var(--ease);
+}
+body.reading #letterUi{opacity:1;transform:none;pointer-events:auto}
+
+/* ---------- abertura ---------- */
+#intro{
+  position:fixed; inset:0; z-index:6; display:grid; place-items:center; padding:32px; text-align:center;
+  transition:opacity .9s ease, visibility .9s;
+}
+#intro.out{opacity:0;visibility:hidden}
+#intro h2{margin:0;font:400 clamp(3.1rem,13.5vw,5.2rem)/.98 var(--serif);letter-spacing:-.02em;text-wrap:balance}
+#intro p{margin:1.4em auto 0;max-width:19em;font-size:1.08rem;line-height:1.55;color:var(--cream-dim)}
+#intro .pill{margin-top:2.3em}
+#intro .in > *{animation:rise 1.1s var(--ease) backwards}
+#intro .in > :nth-child(2){animation-delay:.25s}
+#intro .in > :nth-child(3){animation-delay:.5s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+
+/* ---------- final ---------- */
+#final{
+  position:fixed; inset:0; z-index:5; overflow:auto; display:grid; place-items:center; padding:56px 28px; text-align:center;
+  opacity:0; visibility:hidden; transition:opacity 1.4s ease, visibility 1.4s;
+}
+#final.open{opacity:1;visibility:visible}
+#final .inner{max-width:26em}
+#final h2{margin:0 0 .75em;font:400 clamp(2.7rem,11.5vw,4.3rem)/1 var(--serif);letter-spacing:-.02em;text-wrap:balance}
+#letter p{margin:0 0 .85em;font:400 1.36rem/1.4 var(--serif);text-wrap:pretty}
+.sign{margin:1.1em 0 0;font:400 1.75rem/1.2 var(--hand);color:var(--gold)}
+.row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:2.2em}
+
+/* ---------- guardados ---------- */
+#sheet{position:fixed;inset:0;z-index:8;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,3,6,.55);opacity:0;visibility:hidden;transition:opacity .35s, visibility .35s}
+#sheet.open{opacity:1;visibility:visible}
+.panel{
+  width:min(100%,540px); max-height:78dvh; overflow:auto; overscroll-behavior:contain;
+  background:rgba(28,11,18,.86); -webkit-backdrop-filter:blur(24px); backdrop-filter:blur(24px);
+  border:1px solid rgba(244,234,216,.14); border-bottom:0; border-radius:26px 26px 0 0;
+  padding:26px 26px calc(env(safe-area-inset-bottom) + 28px);
+  transform:translateY(100%); transition:transform .5s var(--ease);
+}
+#sheet.open .panel{transform:none}
+.panel h3{margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;font:400 2rem/1 var(--serif)}
+.panel h3 button{width:42px;height:42px;border-radius:50%;font-size:1.4rem;background:rgba(244,234,216,.1)}
+.panel ol{list-style:none;margin:0;padding:0;counter-reset:m}
+.panel li{counter-increment:m;position:relative;padding:15px 0 15px 44px;border-top:1px solid rgba(244,234,216,.12);font:400 1.22rem/1.3 var(--serif)}
+.panel li::before{content:counter(m);position:absolute;left:0;top:17px;width:30px;font:500 .85rem var(--sans);color:var(--gold);text-align:right}
+
+/* ---------- versão simples (se o 3D não carregar) ---------- */
+body.no3d{background:radial-gradient(120% 80% at 50% 55%, #4a1628 0%, #24101a 55%, #12060b 100%)}
+body.no3d canvas, body.no3d #veil, body.no3d #vig, body.no3d #letterUi{display:none}
+#plain .pill.solid{background:var(--ink);color:var(--cream)}
+#plain{position:fixed;inset:0;z-index:4;display:grid;place-items:center;padding:28px;background:rgba(13,5,9,.7)}
+#plain .note{width:min(88vw,380px);min-height:46vh;display:flex;flex-direction:column;justify-content:space-between;align-items:center;gap:24px;padding:40px 28px 28px;background:var(--paper);color:var(--ink);border-radius:3px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+#plainText{margin:auto 0;font:400 1.75rem/1.35 var(--hand);text-align:center}
+
+@media (max-height:620px){ .top h1{font-size:2.2rem} .top p{display:none} }
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+
+<body data-veil="intro" data-ui="intro">
+<canvas id="scene" aria-hidden="true"></canvas>
+<div id="vig"></div>
+<div id="veil"></div>
+<canvas id="front" aria-hidden="true"></canvas>
+
+<header class="top">
+  <h1>Pote de motivos</h1>
+  <p><span id="total">30</span> coisas que eu amo em você</p>
+</header>
+
+<button id="jarBtn" aria-label="Tirar um papel do pote"></button>
+
+<footer class="bottom">
+  <p id="hint">Toque no pote</p>
+  <div class="progress" aria-hidden="true"><i id="fill"></i></div>
+  <p class="count" id="count"><span id="n">0</span> de <span id="total2">30</span></p>
+  <button class="quiet" id="openList" hidden>Ver guardados</button>
+</footer>
+
+<div id="letterUi">
+  <p class="sr" id="sr" aria-live="polite"></p>
+  <button class="pill" id="keep">Guardar</button>
+</div>
+
+<section id="intro">
+  <div class="in">
+    <h2>Para você,<br><span id="introName">meu amor</span></h2>
+    <p id="introText">Guardei uma coisa num pote. Na verdade, guardei várias.</p>
+    <button class="pill solid" id="start" disabled>Preparando…</button>
+  </div>
+</section>
+
+<section id="final">
+  <div class="inner">
+    <h2>Feliz 3 meses,<br><span id="finalName">meu amor</span></h2>
+    <div id="letter"></div>
+    <p class="sign" id="sign"></p>
+    <div class="row">
+      <button class="pill" id="finalList">Ver guardados</button>
+      <button class="pill" id="restart">Encher o pote de novo</button>
+    </div>
+  </div>
+</section>
+
+<div id="sheet">
+  <div class="panel" role="dialog" aria-modal="true" aria-label="Motivos guardados">
+    <h3>Guardados <button id="closeList" aria-label="Fechar">×</button></h3>
+    <ol id="list"></ol>
+  </div>
+</div>
+
+<div id="plain" hidden>
+  <div class="note"><p id="plainText"></p><button class="pill solid" id="plainKeep">Guardar</button></div>
+</div>
+
+<script type="module">
+const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.min.js';
+const GSAP_URL  = 'https://cdn.jsdelivr.net/npm/gsap@3.15.1/index.js';
+
+const $ = id => document.getElementById(id);
+const M = CONFIG.motivos, TOTAL = M.length;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const KEY = 'pote-motivos-v1';
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const SERIF_LETTER = CONFIG.letraDaCarta === 'Instrument Serif';
+
+/* ---------- estado (lembra onde ela parou) ---------- */
+const shuffle = n => { const a = [...Array(n).keys()], last = a.pop();   // o último motivo sai sempre por último
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; }
+  a.push(last); return a; };
+let st;
+try { st = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+if (!st || !Array.isArray(st.order) || st.order.length !== TOTAL || !(st.n >= 0 && st.n <= TOTAL)) st = { order: shuffle(TOTAL), n: 0 };
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+
+/* ---------- textos ---------- */
+$('introName').textContent = CONFIG.nome;
+$('finalName').textContent = CONFIG.nome;
+$('total').textContent = $('total2').textContent = TOTAL;
+$('sign').textContent = CONFIG.assinatura;
+CONFIG.cartaFinal.forEach(t => { const p = document.createElement('p'); p.textContent = t; $('letter').appendChild(p); });
+{ const [y, m, d] = (CONFIG.dataInicio || '').split('-').map(Number);
+  const days = Math.floor((Date.now() - new Date(y, m - 1, d).getTime()) / 864e5);
+  if (days > 0) $('introText').textContent = `Há ${days} dias você deixa os meus dias mais bonitos. Guardei alguns motivos num pote.`; }
+
+function renderUI(bump) {
+  const left = TOTAL - st.n;
+  $('n').textContent = st.n;
+  $('fill').style.transform = `scaleX(${st.n / TOTAL})`;
+  $('hint').textContent = st.n === 0 ? 'Toque no pote' : left === 0 ? 'O pote ficou vazio. Toque nele.' : left === 1 ? 'Falta só um' : 'Toque para tirar outro';
+  $('openList').hidden = st.n === 0;
+  if (bump) { const c = $('count'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
+}
+renderUI();
+
+/* ====================================================================
+   CENA 3D
+   ==================================================================== */
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function mk(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d', { willReadFrequently: true })]; }
+
+/* ---- texturas procedurais ---- */
+function makePaper(w, h, seed, { aged = 1 } = {}) {
+  const R = rng(seed), [c, g] = mk(w, h);
+  g.fillStyle = '#f0e4c9'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 80; i++) {                                   // manchas largas de tom
+    const x = R() * w, y = R() * h, r = (0.08 + R() * 0.32) * w, a = (0.02 + R() * 0.045) * aged, dark = R() < .62;
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, dark ? `rgba(150,104,48,${a})` : `rgba(255,250,232,${a * 1.4})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
+  }
+  for (let i = 0; i < 220 * aged; i++) {                           // bordas envelhecidas
+    const side = i % 4, t = R(), inset = R() * R() * 0.09;
+    const x = side === 0 ? t * w : side === 1 ? (1 - inset) * w : side === 2 ? t * w : inset * w;
+    const y = side === 0 ? inset * h : side === 1 ? t * h : side === 2 ? (1 - inset) * h : t * h;
+    const r = (0.02 + R() * 0.08) * w, a = 0.03 + R() * 0.065;
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, `rgba(118,72,26,${a})`); gr.addColorStop(1, 'rgba(118,72,26,0)');
+    g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
+  }
+  for (let y = h * .07; y < h * .96; y += h * (.07 + R() * .06)) {    // vincos suaves de ter estado enrolado
+    const yy = y + (R() - .5) * 8, a = (.03 + R() * .05) * aged;
+    let gr = g.createLinearGradient(0, yy - 9, 0, yy + 1); gr.addColorStop(0, 'rgba(96,62,28,0)'); gr.addColorStop(1, `rgba(96,62,28,${a})`);
+    g.fillStyle = gr; g.fillRect(0, yy - 9, w, 10);
+    gr = g.createLinearGradient(0, yy + 1, 0, yy + 12); gr.addColorStop(0, `rgba(255,252,240,${a * 1.5})`); gr.addColorStop(1, 'rgba(255,252,240,0)');
+    g.fillStyle = gr; g.fillRect(0, yy + 1, w, 11);
+  }
+  g.lineCap = 'round';
+  for (let i = 0, n = w * h / 700; i < n; i++) {                   // fibras
+    const x = R() * w, y = R() * h, l = 3 + R() * 20, a = R() * 6.283;
+    g.strokeStyle = R() < .5 ? `rgba(255,251,238,${.05 + R() * .13})` : `rgba(112,76,36,${.04 + R() * .1})`;
+    g.lineWidth = .4 + R() * .9; g.beginPath(); g.moveTo(x, y);
+    g.quadraticCurveTo(x + Math.cos(a) * l * .5 + (R() - .5) * 6, y + Math.sin(a) * l * .5 + (R() - .5) * 6, x + Math.cos(a) * l, y + Math.sin(a) * l);
+    g.stroke();
+  }
+  for (let i = 0; i < 46 * aged; i++) {                            // pintas de idade
+    const x = R() * w, y = R() * h, r = 1 + R() * R() * 7;
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, `rgba(124,74,28,${.1 + R() * .22})`); gr.addColorStop(1, 'rgba(124,74,28,0)');
+    g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
+  }
+  const img = g.getImageData(0, 0, w, h), d = img.data;            // grão fino
+  for (let i = 0; i < d.length; i += 4) { const n = (R() - .5) * 15; d[i] += n; d[i + 1] += n; d[i + 2] += n * .85; }
+  g.putImageData(img, 0, 0);
+  return c;
+}
+function deckle(c, seed, amp) {                                    // borda gasta, rasgada à mão (máscara alfa)
+  const R = rng(seed), g = c.getContext('2d'), w = c.width, h = c.height, step = 3, ph = [R() * 6.28, R() * 6.28, R() * 6.28, R() * 6.28];
+  let n = 0;
+  const off = (t, k) => { n = (n + (R() - .5) * 1.2) * .86;
+    return amp * (1.2 + .55 * Math.sin(t / 97 + ph[k]) + .3 * Math.sin(t / 31 + ph[k] * 2.3)) + n + (R() < .012 ? R() * amp * 1.3 : 0); };
+  g.globalCompositeOperation = 'destination-in'; g.fillStyle = '#000'; g.beginPath();
+  for (let x = 0; x <= w; x += step) g.lineTo(x, off(x, 0));
+  for (let y = 0; y <= h; y += step) g.lineTo(w - off(y, 1), y);
+  for (let x = w; x >= 0; x -= step) g.lineTo(x, h - off(x, 2));
+  for (let y = h; y >= 0; y -= step) g.lineTo(off(y, 3), y);
+  g.closePath(); g.fill(); g.globalCompositeOperation = 'source-over';
+}
+function makeCork() {
+  const R = rng(11), [c, g] = mk(512, 256);
+  g.fillStyle = '#b88a5a'; g.fillRect(0, 0, 512, 256);
+  for (let i = 0; i < 1700; i++) {
+    const x = R() * 512, y = R() * 256, r = .5 + R() * R() * 7;
+    g.fillStyle = R() < .56 ? `rgba(78,47,20,${.14 + R() * .42})` : `rgba(232,196,146,${.12 + R() * .3})`;
+    g.beginPath(); g.ellipse(x, y, r, r * (.45 + R() * .7), R() * 3.14, 0, 6.283); g.fill();
+  }
+  const img = g.getImageData(0, 0, 512, 256), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const n = (R() - .5) * 22; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+  g.putImageData(img, 0, 0); return c;
+}
+function makeCap() {                                               // ponta do rolinho: espiral de papel
+  const [c, g] = mk(128, 128);
+  g.fillStyle = '#e2d0a8'; g.fillRect(0, 0, 128, 128);
+  g.strokeStyle = 'rgba(104,72,36,.6)'; g.lineWidth = 1.7; g.beginPath();
+  for (let a = 0; a < 6.283 * 4.4; a += .1) { const r = 7 + a / (6.283 * 4.4) * 53, x = 64 + Math.cos(a) * r, y = 64 + Math.sin(a) * r; a ? g.lineTo(x, y) : g.moveTo(x, y); }
+  g.stroke();
+  const gr = g.createRadialGradient(64, 64, 0, 64, 64, 9); gr.addColorStop(0, '#22140a'); gr.addColorStop(1, 'rgba(70,44,20,.25)');
+  g.fillStyle = gr; g.beginPath(); g.arc(64, 64, 9, 0, 6.283); g.fill(); return c;
+}
+function makeTwine() {
+  const [c, g] = mk(64, 64); g.fillStyle = '#c7a878'; g.fillRect(0, 0, 64, 64);
+  g.strokeStyle = 'rgba(96,66,34,.8)'; g.lineWidth = 7;
+  for (let i = -64; i < 128; i += 21) { g.beginPath(); g.moveTo(i, 70); g.lineTo(i + 46, -6); g.stroke(); }
+  g.strokeStyle = 'rgba(240,220,180,.5)'; g.lineWidth = 2;
+  for (let i = -54; i < 128; i += 21) { g.beginPath(); g.moveTo(i, 70); g.lineTo(i + 46, -6); g.stroke(); }
+  return c;
+}
+function makeTag(font) {
+  const R = rng(17), [c, g] = mk(256, 384);
+  g.beginPath(); g.moveTo(62, 6); g.lineTo(194, 6); g.lineTo(250, 72); g.lineTo(250, 370); g.quadraticCurveTo(250, 378, 242, 378);
+  g.lineTo(14, 378); g.quadraticCurveTo(6, 378, 6, 370); g.lineTo(6, 72); g.closePath();
+  g.fillStyle = '#b48e62'; g.fill(); g.save(); g.clip();
+  for (let i = 0; i < 900; i++) { const x = R() * 256, y = R() * 384, l = 3 + R() * 16, a = R() * 6.283;
+    g.strokeStyle = R() < .5 ? `rgba(232,204,160,${.06 + R() * .14})` : `rgba(84,56,28,${.06 + R() * .14})`; g.lineWidth = .5 + R();
+    g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
+  g.restore();
+  g.strokeStyle = 'rgba(236,214,176,.9)'; g.lineWidth = 7; g.beginPath(); g.arc(128, 52, 19, 0, 6.283); g.stroke();
+  g.globalCompositeOperation = 'destination-out'; g.beginPath(); g.arc(128, 52, 12, 0, 6.283); g.fill(); g.globalCompositeOperation = 'source-over';
+  g.fillStyle = 'rgba(46,26,14,.9)'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `400 66px ${font}`;
+  g.save(); g.translate(128, 214); g.rotate(-.05); g.fillText('para', 0, -38); g.fillText('você', 0, 40); g.restore();
+  g.strokeStyle = 'rgba(134,26,40,.9)'; g.lineWidth = 3.2; g.lineCap = 'round'; const hy = 334;
+  g.beginPath(); g.moveTo(128, hy + 15); g.bezierCurveTo(100, hy - 4, 114, hy - 26, 128, hy - 8); g.bezierCurveTo(143, hy - 28, 158, hy - 4, 130, hy + 16); g.stroke();
+  return c;
+}
+function makeNoise(size, seed, lo, hi) {
+  const R = rng(seed), [c, g] = mk(size, size), img = g.createImageData(size, size), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const v = lo + R() * (hi - lo); d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+  g.putImageData(img, 0, 0); g.globalAlpha = .5; g.filter = 'blur(1.2px)'; g.drawImage(c, 0, 0); return c;
+}
+function makeDot() {
+  const [c, g] = mk(64, 64), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.35, 'rgba(255,255,255,.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c;
+}
+function makeBokehDot() {
+  const [c, g] = mk(128, 128), b = g.createRadialGradient(64, 64, 0, 64, 64, 62);
+  b.addColorStop(0, 'rgba(255,255,255,.8)'); b.addColorStop(.7, 'rgba(255,255,255,.86)'); b.addColorStop(.87, 'rgba(255,255,255,1)'); b.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = b; g.fillRect(0, 0, 128, 128); return c;
+}
+function makeBackdrop() {                                          // fundo: luzes desfocadas (bokeh)
+  const W = 2048, H = 1024, R = rng(21), [c, g] = mk(W, H);
+  const Y = y => H * (1 - (y + 3) / 18);                           // altura no mundo → pixel
+  const gr = g.createLinearGradient(0, 0, 0, H);
+  gr.addColorStop(0, '#070204'); gr.addColorStop(Y(7.5) / H, '#12060b'); gr.addColorStop(Y(4.6) / H, '#210c15');
+  gr.addColorStop(Y(2.4) / H, '#1c0b12'); gr.addColorStop(1, '#1c0b12');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const cx = W / 2, cy = Y(3.3), rr = 3.4 / 48 * W, rg = g.createRadialGradient(cx, cy, 0, cx, cy, rr);
+  rg.addColorStop(0, 'rgba(200,110,60,.22)'); rg.addColorStop(1, 'rgba(200,110,60,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, W, H);
+  g.globalCompositeOperation = 'lighter';
+  const cols = ['255,186,92', '255,166,66', '255,208,132', '255,176,104', '255,222,168', '255,150,74'];
+  for (let i = 0; i < 150; i++) {
+    const wx = (R() - .5) * 44 * (R() < .6 ? .28 : 1), wy = 2.75 + Math.pow(R(), 1.6) * 5.2, wr = .09 + Math.pow(R(), 2.2) * .42;
+    const fade = 1 - .75 * Math.min(1, Math.max(0, (wy - 4.4) / 2.6));
+    const x = W / 2 + wx / 48 * W, y = Y(wy), r = wr / 48 * W, a = (.07 + R() * .3) * fade, col = cols[i % cols.length];
+    const b = g.createRadialGradient(x, y, 0, x, y, r);
+    b.addColorStop(0, `rgba(${col},${a * .8})`); b.addColorStop(.7, `rgba(${col},${a * .86})`); b.addColorStop(.87, `rgba(${col},${a})`); b.addColorStop(1, `rgba(${col},0)`);
+    g.fillStyle = b; g.beginPath(); g.arc(x, y, r, 0, 6.283); g.fill();
+  }
+  return c;
+}
+function wrapText(g, text, maxW) {
+  const words = text.split(/\s+/), lines = []; let cur = '';
+  for (const w of words) { const t = cur ? cur + ' ' + w : w; if (cur && g.measureText(t).width > maxW) { lines.push(cur); cur = w; } else cur = t; }
+  if (cur) lines.push(cur); return lines;
+}
+
+function buildWorld(THREE, gsap) {
+  const DPR = Math.min(devicePixelRatio || 1, 2);
+  const rA = new THREE.WebGLRenderer({ canvas: $('scene'), antialias: true, powerPreference: 'high-performance' });
+  const rB = new THREE.WebGLRenderer({ canvas: $('front'), antialias: true, alpha: true });
+  for (const r of [rA, rB]) { r.setPixelRatio(DPR); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05; }
+  rA.shadowMap.enabled = true;
+  rB.setClearColor(0x000000, 0);
+
+  const FOG = 0x090104;
+  const A = new THREE.Scene(), B = new THREE.Scene();
+  A.background = new THREE.Color(FOG); A.fog = new THREE.Fog(FOG, 12, 27);
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 80);
+  const tex = (c, srgb = true) => { const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; };
+
+  /* ---- iluminação de estúdio (reflexos no vidro) ---- */
+  const env = new THREE.Scene();
+  env.add(new THREE.Mesh(new THREE.BoxGeometry(44, 44, 44), new THREE.MeshBasicMaterial({ color: 0x07030a, side: THREE.BackSide })));
+  const panel = (w, h, pos, color, k) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h),
+    new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(...pos); m.lookAt(0, 1, 0); env.add(m); };
+  panel(2.6, 15, [-10, 5, 8], 0xfff0dc, 10);     // faixa principal, quente, frente-esquerda
+  panel(1.8, 15, [13, 4, 6], 0xffdfe6, 6.5);     // faixa à direita
+  panel(2.6, 13, [-13, 3, -9], 0xffc48a, 8);     // contraluz quente, atrás à esquerda
+  panel(1.6, 12, [12, 4, -10], 0xffd2b0, 5);     // contraluz, atrás à direita
+  panel(12, 5, [0, 16, 2], 0xfff4e6, 2.2);       // topo, suave
+  { const R = rng(3); for (let i = 0; i < 16; i++) { const a = R() * 6.283, y = 2 + R() * 9, d = 15;
+      const m = new THREE.Mesh(new THREE.SphereGeometry(.22 + R() * .2, 8, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffc27a).multiplyScalar(26) }));
+      m.position.set(Math.cos(a) * d, y, Math.sin(a) * d); env.add(m); } }
+  for (const [r, s, k] of [[rA, A, 1], [rB, B, .32]]) { const pm = new THREE.PMREMGenerator(r); s.environment = pm.fromScene(env, 0.03).texture; s.environmentIntensity = k; pm.dispose(); }
+
+  const key = new THREE.DirectionalLight(0xffe7cc, 2.3); key.position.set(-4, 7.5, 5.5); key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024); Object.assign(key.shadow.camera, { left: -2.4, right: 2.4, top: 3.2, bottom: -1.2, near: 2, far: 18 });
+  key.shadow.bias = -0.0006; key.shadow.radius = 5; A.add(key);
+  const rim = new THREE.DirectionalLight(0xff9db0, .9); rim.position.set(5, 3.5, -6); A.add(rim);
+  const keyB = new THREE.DirectionalLight(0xfff0dc, 4.4); B.add(keyB, keyB.target);
+  B.add(new THREE.AmbientLight(0xffe9d2, .5));
+
+  /* ---- fundo e mesa ---- */
+  const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(48, 18), new THREE.MeshBasicMaterial({ map: tex(makeBackdrop()), fog: false }));
+  backdrop.position.set(0, 6, -16); A.add(backdrop);
+
+  const FLOOR = 80, [wc, wg] = mk(4, 4); wg.fillStyle = '#fff'; wg.fillRect(0, 0, 4, 4);
+  const rough = tex(makeNoise(256, 9, 92, 138), false); rough.wrapS = rough.wrapT = THREE.RepeatWrapping; rough.repeat.set(26, 26);
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0x2c1019, roughness: 1, roughnessMap: rough, metalness: 0, map: tex(wc), envMapIntensity: .42 });
+  floorMat.onBeforeCompile = sh => {                                // sombra de contacto + brilho da luz através do vidro
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        vec2 fp = (vMapUv - 0.5) * ${FLOOR.toFixed(1)};
+        diffuseColor.rgb *= mix(0.16, 1.0, smoothstep(0.35, 2.5, length(fp - vec2(0.16, 0.2))));`)
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        totalEmissiveRadiance += vec3(1.0, 0.6, 0.32) * 0.085 * exp(-pow(length((fp - vec2(0.62, 0.74)) * vec2(1.0, 1.5)) / 0.46, 2.0));`);
+  };
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(FLOOR, FLOOR), floorMat);
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; A.add(floor);
+
+  /* ---- pote ---- */
+  const jar = new THREE.Group(); A.add(jar);
+  const prof = [], P = (r, y) => prof.push(new THREE.Vector2(r, y));
+  const arc = (cx, cy, rad, a0, a1, n) => { for (let i = 1; i <= n; i++) { const a = (a0 + (a1 - a0) * i / n) * Math.PI / 180; P(cx + Math.cos(a) * rad, cy + Math.sin(a) * rad); } };
+  const bez = (x0, y0, x1, y1, x2, y2, x3, y3, n) => { for (let i = 1; i <= n; i++) { const t = i / n, m = 1 - t;
+    P(m * m * m * x0 + 3 * m * m * t * x1 + 3 * m * t * t * x2 + t * t * t * x3, m * m * m * y0 + 3 * m * m * t * y1 + 3 * m * t * t * y2 + t * t * t * y3); } };
+  P(0, 0); P(0.62, 0); arc(0.62, 0.2, 0.2, -90, 0, 10);            // fundo e canto exterior
+  P(0.82, 1.40); bez(0.82, 1.40, 0.82, 1.78, 0.52, 1.74, 0.52, 2.0, 18);   // parede e ombro
+  P(0.52, 2.11); arc(0.52, 2.19, 0.08, -90, 90, 12);               // rebordo da boca
+  P(0.47, 2.27); P(0.455, 2.255); P(0.455, 2.0);
+  bez(0.455, 2.0, 0.455, 1.76, 0.76, 1.78, 0.76, 1.40, 18);        // interior
+  P(0.76, 0.30); arc(0.60, 0.30, 0.16, 0, -90, 10); P(0, 0.14);
+  const glassMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff, roughness: 0.035, metalness: 0, transmission: 1, ior: 1.5, thickness: 0.14,
+    attenuationColor: new THREE.Color(0xdff3ec), attenuationDistance: 2.6, specularIntensity: 1, envMapIntensity: 1.25, side: THREE.DoubleSide
+  });
+  const glass = new THREE.Mesh(new THREE.LatheGeometry(prof, 96), glassMat); jar.add(glass);
+
+  const inner = new THREE.PointLight(0xffb066, 0.55, 3, 2); inner.position.set(0, 0.95, 0); jar.add(inner);
+
+  const corkTex = tex(makeCork()); corkTex.wrapS = THREE.RepeatWrapping; corkTex.wrapT = THREE.RepeatWrapping; corkTex.repeat.set(2, 2);
+  const corkMat = new THREE.MeshStandardMaterial({ map: corkTex, bumpMap: corkTex, bumpScale: 1.6, roughness: .96 });
+  const CORK_Y = 1.985;
+  const cork = new THREE.Mesh(new THREE.LatheGeometry([[0, 0], [0.40, 0], [0.432, 0.028], [0.495, 0.5], [0.468, 0.532], [0, 0.532]].map(p => new THREE.Vector2(...p)), 64), corkMat);
+  cork.position.y = CORK_Y; cork.castShadow = true; jar.add(cork);
+
+  const twTex = tex(makeTwine()); twTex.wrapS = twTex.wrapT = THREE.RepeatWrapping; twTex.repeat.set(70, 1);
+  const twMat = new THREE.MeshStandardMaterial({ map: twTex, bumpMap: twTex, bumpScale: 2, roughness: 1 });
+  [[2.018, .012, 0], [2.053, -.016, 1.3], [2.086, .01, 2.6]].forEach(([y, tilt, ry]) => {
+    const g = new THREE.TorusGeometry(0.538, 0.0185, 10, 96); g.rotateX(Math.PI / 2);
+    const m = new THREE.Mesh(g, twMat); m.position.y = y; m.rotation.set(tilt, ry, tilt * .6); jar.add(m);
+  });
+
+  const tagGeo = new THREE.PlaneGeometry(0.29, 0.435); tagGeo.translate(0, -0.158, 0);     // o furo fica no eixo de rotação
+  const tag = new THREE.Mesh(tagGeo, new THREE.MeshStandardMaterial({ map: tex(makeTag(SERIF_LETTER ? '"Instrument Serif"' : '"La Belle Aurore"')), alphaTest: .5, side: THREE.DoubleSide, roughness: .95 }));
+  tag.rotation.order = 'YXZ'; tag.rotation.set(-.6, -.52, .07); tag.position.set(Math.sin(-.52) * .572, 2.04, Math.cos(-.52) * .572);
+  tag.castShadow = true; jar.add(tag);
+
+  /* ---- rolinhos de papel ---- */
+  const SR = 0.08, SL = 0.64;
+  const sideTex = tex(makePaper(256, 128, 5, { aged: .7 }));
+  const capMat = new THREE.MeshStandardMaterial({ map: tex(makeCap()), roughness: .9 });
+  const sideMats = [0xffffff, 0xf4e7d0, 0xeadabb].map(c => new THREE.MeshStandardMaterial({ map: sideTex, color: c, roughness: .88 }));
+  const ribMat = new THREE.MeshStandardMaterial({ color: 0x8c1626, roughness: .5 });
+  const cylGeo = new THREE.CylinderGeometry(SR, SR, SL, 28, 1, false); cylGeo.rotateZ(Math.PI / 2);
+  const ribGeo = new THREE.CylinderGeometry(SR * 1.05, SR * 1.05, 0.032, 28, 1, true); ribGeo.rotateZ(Math.PI / 2);
+  const segDist = (ax, ay, bx, by, cx, cy, dx, dy) => {             // distância entre dois segmentos (2D)
+    const pd = (px, py, x1, y1, x2, y2) => { const vx = x2 - x1, vy = y2 - y1, t = Math.max(0, Math.min(1, ((px - x1) * vx + (py - y1) * vy) / (vx * vx + vy * vy))); return Math.hypot(px - x1 - t * vx, py - y1 - t * vy); };
+    const o = (x1, y1, x2, y2, x3, y3) => Math.sign((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1));
+    if (o(ax, ay, bx, by, cx, cy) !== o(ax, ay, bx, by, dx, dy) && o(cx, cy, dx, dy, ax, ay) !== o(cx, cy, dx, dy, bx, by)) return 0;
+    return Math.min(pd(ax, ay, cx, cy, dx, dy), pd(bx, by, cx, cy, dx, dy), pd(cx, cy, ax, ay, bx, by), pd(dx, dy, ax, ay, bx, by));
+  };
+  const scrolls = [];
+  { const R = rng(42), Rin = 0.735; let layer = 0;
+    while (scrolls.length < TOTAL && layer < 40) {
+      const y = 0.14 + SR + layer * SR * 1.94, base = layer * 1.9 + R() * .6, placed = [];
+      for (let a = 0; a < 260 && scrolls.length < TOTAL && placed.length < 6; a++) {
+        const yaw = base + (R() - .5) * .95, dx = Math.cos(yaw) * SL / 2, dz = Math.sin(yaw) * SL / 2;
+        const pr = Math.sqrt(R()) * (Rin - .06), pa = R() * 6.283, cx = Math.cos(pa) * pr, cz = Math.sin(pa) * pr;
+        if (Math.hypot(cx + dx, cz + dz) > Rin - SR * .55 || Math.hypot(cx - dx, cz - dz) > Rin - SR * .55) continue;
+        if (placed.some(s => segDist(cx - dx, cz - dz, cx + dx, cz + dz, ...s) < SR * 2.04)) continue;
+        placed.push([cx - dx, cz - dz, cx + dx, cz + dz]);
+        const s = new THREE.Group(), body = new THREE.Mesh(cylGeo, [sideMats[scrolls.length % 3], capMat, capMat]), rib = new THREE.Mesh(ribGeo, ribMat);
+        body.castShadow = body.receiveShadow = rib.castShadow = true; rib.position.x = (R() - .5) * .08; s.add(body, rib);
+        s.rotation.order = 'YZX'; s.rotation.set(R() * 6.283, -yaw, (R() - .5) * (layer > 3 ? .34 : .16));
+        s.position.set(cx, y + (R() - .5) * .012, cz);
+        s.userData.home = { p: s.position.clone(), q: s.quaternion.clone() };
+        jar.add(s); scrolls.push(s);
+      }
+      layer++;
+    }
+  }
+
+  /* ---- poeira de luz ---- */
+  const DN = 46, dust = new THREE.BufferGeometry(), dp = new Float32Array(DN * 3), dseed = [];
+  { const R = rng(8); for (let i = 0; i < DN; i++) { dp[i * 3] = (R() - .5) * 4.6; dp[i * 3 + 1] = .2 + R() * 4; dp[i * 3 + 2] = -1.6 + R() * 4.2; dseed.push(R() * 6.283, .05 + R() * .08); } }
+  dust.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  const dustPts = new THREE.Points(dust, new THREE.PointsMaterial({ map: tex(makeDot()), size: .055, transparent: true, opacity: .55, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xffd9a6, fog: false }));
+  A.add(dustPts);
+
+  const TW = REDUCED ? 0 : 28, twk = new THREE.BufferGeometry(), twp = new Float32Array(Math.max(1, TW) * 3), twc = new Float32Array(Math.max(1, TW) * 3), tws = [];
+  { const R = rng(51); for (let i = 0; i < TW; i++) { twp[i * 3] = (R() - .5) * 18; twp[i * 3 + 1] = 2.9 + Math.pow(R(), 1.4) * 3.4; twp[i * 3 + 2] = -13.5 - R(); tws.push(.05 + R() * .13, .5 + R() * 1.1, R() * 6.283); } }
+  twk.setAttribute('position', new THREE.BufferAttribute(twp, 3)); twk.setAttribute('color', new THREE.BufferAttribute(twc, 3));
+  A.add(new THREE.Points(twk, new THREE.PointsMaterial({ map: tex(makeBokehDot()), size: .66, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })));
+
+  /* ---- a carta (papel que desenrola) ---- */
+  const LW = SL, LH = 0.90, NX = 8, NS = 200, RIN = 0.04, KS = (SR * SR - RIN * RIN) / (2 * LH), UMAX = 0.93;
+  const LTW = 1024, LTH = Math.round(1024 * LH / LW);
+  const paperCanvas = makePaper(LTW, LTH, 77); deckle(paperCanvas, 31, 4);
+  const [letterCanvas, lg2] = mk(LTW, LTH);
+  const letterTex = tex(letterCanvas), backTex = tex(paperCanvas);
+  const bump = tex(makeNoise(256, 4, 90, 165), false); bump.wrapS = bump.wrapT = THREE.RepeatWrapping; bump.repeat.set(3, 4);
+  const paperOpts = { alphaTest: .5, alphaToCoverage: true, roughness: .92, metalness: 0, bumpMap: bump, bumpScale: 1.1 };
+  const geo = new THREE.BufferGeometry(), NV = (NX + 1) * (NS + 1), pos = new Float32Array(NV * 3), uv = new Float32Array(NV * 2), ix = [];
+  for (let j = 0; j <= NS; j++) for (let i = 0; i <= NX; i++) { const k = j * (NX + 1) + i; uv[2 * k] = i / NX; uv[2 * k + 1] = 1 - j / NS; }
+  for (let j = 0; j < NS; j++) for (let i = 0; i < NX; i++) { const a = j * (NX + 1) + i, b = a + 1, c = a + NX + 1, d = c + 1; ix.push(a, c, b, b, c, d); }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); geo.setIndex(ix);
+  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 2);
+  const hero = new THREE.Group();
+  hero.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ ...paperOpts, map: letterTex, side: THREE.FrontSide })),
+           new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ ...paperOpts, map: backTex, side: THREE.BackSide })));
+  hero.visible = false; B.add(hero);
+
+  const phi = a => (-RIN + Math.sqrt(RIN * RIN + 2 * KS * a)) / KS;   // ângulo da espiral para um comprimento de papel enrolado
+  function setUnroll(u) {
+    const F = u * LH, phiMax = phi(LH - F), rMax = RIN + KS * phiMax, oy = -F / 2, oz = rMax * (1 - u), flat = Math.min(1, F / .2);
+    for (let j = 0; j <= NS; j++) {
+      const s = j / NS * LH; let y, z;
+      if (s <= F) { const t = F > 0 ? s / F : 0;
+        y = -s; z = flat * (0.06 * Math.exp(-s / 0.085) - 0.022 * Math.sin(t * Math.PI)); }      // a ponta de cima ainda quer enrolar
+      else { const ph = phi(LH - s), r = RIN + KS * ph, psi = phiMax - ph; y = -F - r * Math.sin(psi); z = rMax - r * Math.cos(psi); }
+      for (let i = 0; i <= NX; i++) { const k = (j * (NX + 1) + i) * 3, xn = i / NX - .5;
+        pos[k] = xn * LW; pos[k + 1] = y - oy; pos[k + 2] = z - oz + flat * (0.035 * xn * xn + 0.006 * Math.sin(s * 21 + xn * 3)); }
+    }
+    geo.attributes.position.needsUpdate = true; geo.computeVertexNormals();
+  }
+  setUnroll(0);
+
+  function drawLetter(num, text) {
+    const g = lg2, w = LTW, h = LTH;
+    g.globalCompositeOperation = 'copy'; g.drawImage(paperCanvas, 0, 0); g.globalCompositeOperation = 'multiply';
+    const font = px => SERIF_LETTER ? `italic 400 ${px}px "Instrument Serif"` : `400 ${px}px "La Belle Aurore"`;
+    const lhK = SERIF_LETTER ? 1.16 : 1.28, maxW = w * .76, maxH = h * .54;
+    let size = SERIF_LETTER ? 112 : 104, lines;
+    for (; size >= 46; size -= 4) { g.font = font(size); lines = wrapText(g, text, maxW); if (lines.length * size * lhK <= maxH) break; }
+    g.save(); g.translate(w / 2, h / 2); g.rotate(SERIF_LETTER ? 0 : -0.014);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.shadowColor = 'rgba(43,26,18,.45)'; g.shadowBlur = 2.2; g.fillStyle = 'rgba(38,22,14,.92)';
+    const lh = size * lhK, y0 = -(lines.length - 1) * lh / 2 + h * .01;
+    lines.forEach((ln, i) => g.fillText(ln, 0, y0 + i * lh));
+    g.font = font(Math.round(Math.min(64, size * .62))); g.fillStyle = 'rgba(128,30,42,.88)'; g.shadowColor = 'rgba(128,30,42,.4)';
+    g.fillText(`nº ${num}`, 0, -h * .355);
+    const hy = h * .355; g.strokeStyle = 'rgba(140,26,40,.86)'; g.lineWidth = 3.4; g.lineCap = g.lineJoin = 'round';   // coração a caneta
+    g.beginPath(); g.moveTo(0, hy + 20); g.bezierCurveTo(-36, hy - 6, -18, hy - 36, 0, hy - 12); g.bezierCurveTo(19, hy - 38, 40, hy - 6, 3, hy + 22); g.stroke();
+    g.restore(); g.shadowBlur = 0;
+    letterTex.needsUpdate = true;
+  }
+
+  /* ---- pétalas (final) ---- */
+  const PN = REDUCED ? 0 : 34, petGeo = new THREE.PlaneGeometry(1, 1, 6, 8);
+  { const p = petGeo.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), v = p.getY(i) + .5, wdt = Math.pow(Math.sin(Math.PI * Math.min(.999, Math.max(.001, v))), .55) * (.5 + .5 * v);
+      p.setXYZ(i, x * wdt, (v - .5) * 1.15, .32 * x * x * wdt + .22 * (v - .5) * (v - .5) - .05); } petGeo.computeVertexNormals(); }
+  const petals = new THREE.InstancedMesh(petGeo, new THREE.MeshStandardMaterial({ color: 0xa3152c, roughness: .55, side: THREE.DoubleSide, emissive: 0x2a0308 }), Math.max(1, PN));
+  petals.visible = false; petals.frustumCulled = false; B.add(petals);
+  const pet = []; { const R = rng(64); for (let i = 0; i < PN; i++) pet.push({ x: R() * 2 - 1, y: R() * 2.4 - 1.2, d: 2.2 + R() * 4.5, v: .1 + R() * .12, s: .05 + R() * .05,
+    ax: new THREE.Vector3(R() - .5, R() - .5, R() - .5).normalize(), w: .5 + R() * 1.3, ph: R() * 6.283, sw: .3 + R() * .5 }); }
+
+  /* ---- câmara ---- */
+  const look = new THREE.Vector3(0, 1.24, 0), cam = { far: REDUCED ? 0 : 1, D: 10 }, ptr = { x: 0, y: 0, tx: 0, ty: 0 };
+  function resize() {
+    const w = innerWidth, h = innerHeight; rA.setSize(w, h, false); rB.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    const tanH = Math.tan(camera.fov * Math.PI / 360);
+    cam.D = Math.max(2.3 / tanH, 1.14 / (tanH * camera.aspect));     // o pote cabe em altura e em largura
+    needA = 2;
+  }
+  addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { ptr.tx = e.clientX / innerWidth * 2 - 1; ptr.ty = e.clientY / innerHeight * 2 - 1; } });
+
+  const tmpP = new THREE.Vector3(), tmpQ = new THREE.Quaternion(), tmpV = new THREE.Vector3(), tmpE = new THREE.Euler(), tmpQ2 = new THREE.Quaternion(), tmpM = new THREE.Matrix4(), tmpS = new THREE.Vector3();
+  function readPose(P, Q, t) {                                       // onde a carta fica para ser lida
+    const tanH = Math.tan(camera.fov * Math.PI / 360), d = Math.max(LW / (.84 * camera.aspect * 2 * tanH), LH / (.64 * 2 * tanH));
+    camera.getWorldDirection(tmpV); P.copy(camera.position).addScaledVector(tmpV, d);
+    tmpV.set(0, 1, 0).applyQuaternion(camera.quaternion); P.addScaledVector(tmpV, .035 * 2 * d * tanH);
+    tmpE.set(.03 + Math.sin(t * .62) * .03, Math.sin(t * .47) * .055, -.022 + Math.sin(t * .38) * .008);
+    Q.copy(camera.quaternion).multiply(tmpQ2.setFromEuler(tmpE));
+  }
+  function exitPose(P, Q) {                                          // para onde vai quando é guardada (em baixo, ao centro)
+    const tanH = Math.tan(camera.fov * Math.PI / 360), d = 5;
+    camera.getWorldDirection(tmpV); P.copy(camera.position).addScaledVector(tmpV, d);
+    tmpV.set(0, 1, 0).applyQuaternion(camera.quaternion); P.addScaledVector(tmpV, -.86 * d * tanH);
+    Q.copy(camera.quaternion).multiply(tmpQ2.setFromEuler(tmpE.set(.5, .3, .2)));
+  }
+
+  /* ---- ciclo de desenho ---- */
+  const fl = { p: 0, arc: 0, from: new THREE.Vector3(), fromQ: new THREE.Quaternion(), scale: 1, mode: 'in' }, L = { u: 0 };
+  let activeA = true, activeB = false, needA = 2, sway = 0, last = performance.now(), petalsOn = false, corkOpen = false, q = DPR, fAcc = 0, fN = -40;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const raw = (now - last) / 1000, dt = Math.min(.05, raw), t = now / 1000; last = now;
+    if (activeA && raw < .25) { if (fN >= 0) fAcc += raw; if (++fN === 45) { if (fAcc / 45 > 1 / 36 && q > 1) { q = Math.max(1, q - .5); rA.setPixelRatio(q); rB.setPixelRatio(q); resize(); } fAcc = 0; fN = 0; } }
+    if (activeA || needA > 0) {
+      if (activeA && !REDUCED) sway += dt;
+      ptr.x += (ptr.tx - ptr.x) * .04; ptr.y += (ptr.ty - ptr.y) * .04;
+      camera.position.set(Math.sin(sway * .23) * .5 + ptr.x * .7, 2.2 + Math.sin(sway * .17) * .13 - ptr.y * .25 + cam.far * .5, cam.D * (1 + cam.far * .42));
+      camera.lookAt(look);
+      const a = dust.attributes.position;
+      for (let i = 0; i < DN; i++) { let y = a.getY(i) + dseed[i * 2 + 1] * dt; if (y > 4.3) y = .2; a.setY(i, y); a.setX(i, a.getX(i) + Math.sin(t * .4 + dseed[i * 2]) * .0008); }
+      a.needsUpdate = true;
+      for (let i = 0; i < TW; i++) { const k = tws[i * 3] * (.25 + .75 * (.5 + .5 * Math.sin(t * tws[i * 3 + 1] + tws[i * 3 + 2]))); twc[i * 3] = k; twc[i * 3 + 1] = k * .68; twc[i * 3 + 2] = k * .34; }
+      twk.attributes.color.needsUpdate = true;
+      inner.intensity = .55 + Math.sin(t * 1.3) * .06; tag.rotation.z = .07 + Math.sin(t * .9) * .018;
+      if (corkOpen) cork.position.y += Math.sin(t * 1.6) * .0006;
+      rA.render(A, camera); if (needA > 0) needA--;
+    }
+    if (activeB) {
+      if (hero.visible) {
+        if (fl.mode === 'in') readPose(tmpP, tmpQ, t); else exitPose(tmpP, tmpQ);
+        hero.position.lerpVectors(fl.from, tmpP, fl.p); hero.position.y += Math.sin(fl.p * Math.PI) * fl.arc;
+        hero.quaternion.slerpQuaternions(fl.fromQ, tmpQ, fl.p); hero.scale.setScalar(fl.scale);
+      }
+      if (petalsOn) {
+        const tanH = Math.tan(camera.fov * Math.PI / 360);
+        for (let i = 0; i < PN; i++) { const p = pet[i]; p.y -= p.v * dt; if (p.y < -1.25) { p.y = 1.25; p.x = Math.random() * 2 - 1; }
+          const hh = p.d * tanH, x = (p.x + Math.sin(t * p.sw + p.ph) * .08) * hh * camera.aspect * 1.15, y = p.y * hh;
+          tmpP.set(x, y, -p.d).applyMatrix4(camera.matrixWorld); tmpQ.setFromAxisAngle(p.ax, t * p.w + p.ph);
+          petals.setMatrixAt(i, tmpM.compose(tmpP, tmpQ, tmpS.setScalar(p.s))); }
+        petals.instanceMatrix.needsUpdate = true;
+      }
+      keyB.position.copy(hero.position).add(tmpV.set(-1.25, 1.5, 1.0).applyQuaternion(camera.quaternion)); keyB.target.position.copy(hero.position);
+      rB.render(B, camera);
+    }
+  }
+  resize(); addEventListener('resize', resize);
+  camera.position.set(0, 2.2, cam.D); camera.lookAt(look);
+  requestAnimationFrame(frame);
+
+  const done = tl => new Promise(r => tl.eventCallback('onComplete', r));
+  const qVert = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, Math.PI / 2));
+  if (REDUCED) gsap.globalTimeline.timeScale(2.2);
+
+  return {
+    setCount(n) { scrolls.forEach((s, i) => { s.visible = i < scrolls.length - n; s.position.copy(s.userData.home.p); s.quaternion.copy(s.userData.home.q); }); needA = 2; },
+    intro() { gsap.to(cam, { far: 0, duration: 2.6, ease: 'power3.out' }); },
+
+    async draw(num, text) {
+      drawLetter(num, text);
+      const sc = scrolls[scrolls.length - num]; activeA = true;
+      gsap.killTweensOf([cork.position, cork.rotation]);
+      const tl = gsap.timeline(), q0 = sc ? sc.quaternion.clone() : null, o = { q: 0 };
+      tl.timeScale(num > 3 ? 1.25 : 1);
+      // o pote estremece e os rolinhos saltam
+      tl.to(jar.rotation, { z: .034, duration: .09, ease: 'sine.out' }).to(jar.rotation, { z: -.028, duration: .13, ease: 'sine.inOut' })
+        .to(jar.rotation, { z: .014, duration: .12, ease: 'sine.inOut' }).to(jar.rotation, { z: 0, duration: .22, ease: 'sine.out' });
+      scrolls.forEach(s => { if (s.visible && s !== sc) tl.to(s.position, { y: '+=' + (.012 + Math.random() * .03), duration: .1, ease: 'power2.out', yoyo: true, repeat: 1 }, .03 + Math.random() * .12); });
+      // a rolha roda, solta-se e sai
+      tl.to(cork.rotation, { y: '+=1.1', duration: .5, ease: 'power2.inOut' }, .28)
+        .to(cork.position, { y: CORK_Y + .09, duration: .5, ease: 'power2.in' }, .28)
+        .to(cork.position, { y: CORK_Y + .92, duration: .5, ease: 'back.out(1.5)' }, .78)
+        .to(cork.position, { x: .66, y: CORK_Y + .66, z: .28, duration: .9, ease: 'power2.inOut' }, 1.12)
+        .to(cork.rotation, { z: -.62, x: .32, duration: .9, ease: 'power2.inOut' }, 1.12)
+        .add(() => { corkOpen = true; }, 2.02);
+      const hand = () => {
+        if (sc) { sc.getWorldPosition(fl.from); sc.getWorldQuaternion(fl.fromQ); sc.visible = false; } else { fl.from.set(0, 3, 0); fl.fromQ.copy(qVert); }
+        fl.p = 0; fl.arc = .2; fl.scale = 1; fl.mode = 'in'; L.u = 0; setUnroll(0); hero.visible = true; activeB = true;
+        document.body.dataset.veil = 'letter';
+      };
+      if (sc) {
+        // um rolinho sobe pelo gargalo
+        tl.to(sc.position, { x: 0, z: 0, y: 1.5, duration: .6, ease: 'power2.inOut' }, 1.05)
+          .to(o, { q: 1, duration: .6, ease: 'power2.inOut', onUpdate: () => sc.quaternion.slerpQuaternions(q0, qVert, o.q) }, 1.05)
+          .to(sc.position, { y: 3.02, duration: .62, ease: 'power1.inOut' }, 1.62);
+      }
+      // passa para a frente, voa até à câmara e desenrola
+      tl.add(hand, 2.24)
+        .to(fl, { p: 1, duration: 1.15, ease: 'power3.inOut' }, 2.24)
+        .to(L, { u: UMAX, duration: 1.35, ease: 'power2.inOut', onUpdate: () => setUnroll(L.u) }, 3.0);
+      await done(tl);
+      setTimeout(() => { activeA = false; }, 300);
+    },
+
+    async keep() {
+      activeA = true; corkOpen = false;
+      const tl = gsap.timeline();
+      tl.to(L, { u: 0, duration: .55, ease: 'power2.in', onUpdate: () => setUnroll(L.u) }, 0)
+        .add(() => { readPose(fl.from, fl.fromQ, performance.now() / 1000); fl.mode = 'out'; fl.p = 0; fl.arc = 0; document.body.dataset.veil = 'off'; }, .5)
+        .to(fl, { p: 1, duration: .62, ease: 'power2.in' }, .5)
+        .to(fl, { scale: .25, duration: .62, ease: 'power2.in' }, .5)
+        .add(() => { hero.visible = false; }, 1.13)
+        // a rolha volta ao lugar
+        .to(cork.position, { x: 0, z: 0, y: CORK_Y + .5, duration: .55, ease: 'power2.inOut' }, .3)
+        .to(cork.rotation, { z: 0, x: 0, duration: .55, ease: 'power2.inOut' }, .3)
+        .to(cork.position, { y: CORK_Y, duration: .26, ease: 'power2.in' }, .85)
+        .to(jar.rotation, { z: .012, duration: .07 }, 1.11).to(jar.rotation, { z: 0, duration: .25, ease: 'sine.out' }, 1.18);
+      await done(tl);
+      setTimeout(() => { if (!hero.visible && !petalsOn) activeB = false; }, 80);
+    },
+
+    final(on) { petalsOn = on; petals.visible = on && PN > 0; activeB = on || hero.visible; activeA = !on; needA = 2; },
+    get debug() { return { camera, jar, cork, scrolls, hero, fl, L, setUnroll, drawLetter, glassMat, floorMat, A, B, rA, set activeA(v) { activeA = v; } }; }
+  };
+}
+
+/* ====================================================================
+   FLUXO
+   ==================================================================== */
+let world = null, state = 'intro';
+try {
+  if (new URLSearchParams(location.search).has('simples')) throw new Error('modo simples pedido');
+  const [T, G] = await Promise.all([import(THREE_URL), import(GSAP_URL)]);
+  await Promise.race([Promise.all([document.fonts.load('80px "La Belle Aurore"'), document.fonts.load('italic 80px "Instrument Serif"'), document.fonts.load('80px "Instrument Serif"')]), wait(3000)]);
+  world = buildWorld(T, G.default || G.gsap);
+  world.setCount(st.n);
+} catch (e) {
+  console.error('3D indisponível, a usar a versão simples:', e);
+  document.body.classList.add('no3d');
+}
+$('start').disabled = false; $('start').textContent = 'Abrir o presente';
+
+$('start').addEventListener('click', () => {
+  $('intro').classList.add('out'); document.body.dataset.veil = 'off'; document.body.dataset.ui = 'main';
+  world?.intro();
+  setTimeout(() => { state = 'idle'; $('jarBtn').focus({ preventScroll: true }); }, world ? 1500 : 0);
+});
+
+async function onJar() {
+  if (state !== 'idle') return;
+  if (st.n >= TOTAL) return showFinal();
+  state = 'drawing'; document.body.dataset.ui = 'letter';
+  if (navigator.vibrate) try { navigator.vibrate(15); } catch (e) {}
+  const idx = st.order[st.n], num = st.n + 1;
+  if (world) await world.draw(num, M[idx]); else { $('plainText').textContent = M[idx]; $('plain').hidden = false; }
+  $('sr').textContent = `Motivo ${num} de ${TOTAL}: ${M[idx]}`;
+  state = 'reading'; document.body.classList.add('reading');
+  (world ? $('keep') : $('plainKeep')).focus({ preventScroll: true });
+}
+async function onKeep() {
+  if (state !== 'reading') return;
+  state = 'keeping'; document.body.classList.remove('reading');
+  if (world) await world.keep(); else $('plain').hidden = true;
+  st.n++; save(); renderUI(true); $('sr').textContent = '';
+  if (st.n >= TOTAL) { await wait(900); showFinal(); }
+  else { document.body.dataset.ui = 'main'; state = 'idle'; $('jarBtn').focus({ preventScroll: true }); }
+}
+function showFinal() {
+  state = 'final'; document.body.dataset.ui = 'final'; document.body.dataset.veil = 'final';
+  $('final').classList.add('open'); world?.final(true);
+}
+$('jarBtn').addEventListener('click', onJar);
+$('keep').addEventListener('click', onKeep);
+$('plainKeep').addEventListener('click', onKeep);
+$('restart').addEventListener('click', () => {
+  st = { order: shuffle(TOTAL), n: 0 }; save(); renderUI(); world?.setCount(0); world?.final(false);
+  $('final').classList.remove('open'); document.body.dataset.veil = 'off'; document.body.dataset.ui = 'main'; state = 'idle';
+});
+
+/* ---------- guardados ---------- */
+function openList() {
+  const ol = $('list'); ol.textContent = '';
+  st.order.slice(0, st.n).forEach(i => { const li = document.createElement('li'); li.textContent = M[i]; ol.appendChild(li); });
+  $('sheet').classList.add('open'); $('closeList').focus({ preventScroll: true });
+}
+const closeList = () => $('sheet').classList.remove('open');
+$('openList').addEventListener('click', openList);
+$('finalList').addEventListener('click', openList);
+$('closeList').addEventListener('click', closeList);
+$('sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeList(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('sheet').classList.contains('open')) closeList(); else onKeep(); } });
+
+window.__pote = { get state() { return state; }, get world() { return world; }, st };
+</script>
+</body>
+</html>

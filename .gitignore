@@ -1,0 +1,6 @@
+.DS_Store
+
+# Gravações de música têm direitos de autor: ficam só no computador, fora do repositório público
+*.mp3
+*.m4a
+*.wav
