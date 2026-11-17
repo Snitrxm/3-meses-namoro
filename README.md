@@ -7,4 +7,4 @@ Site-presente: um pote de vidro em 3D com 30 papeizinhos, à frente d'A Noite Es
 
 Para personalizar (nome, data, frases, música, volume), edite o bloco `CONFIG` no topo do `index.html`.
 
-A música é lida de um ficheiro de áudio colocado na mesma pasta, com o nome indicado em `CONFIG.musica`. Os ficheiros de áudio não estão no repositório; sem eles, o site toca um piano suave gerado por código.
+A música é lida do ficheiro de áudio que está nesta pasta, com o nome indicado em `CONFIG.musica`. Se o ficheiro faltar, o site toca um piano suave gerado por código.
